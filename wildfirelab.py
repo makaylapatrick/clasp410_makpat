@@ -42,7 +42,7 @@ p_bare = 0.0 # Chance of cell to start as a bare patch.
 p_ignite = 0.0 # Chance of cell to start on fire.
 
 #Implement time as a varaible for the model
-time_step = 1
+time_step = 0
 
 #Section 3: Original Forest
 
@@ -135,7 +135,9 @@ for k in range(0, time_step):
 forest_cmap = ListedColormap(['tan', 'darkgreen', 'firebrick'])
 
 # Create figure and set of axes:
-fig, ax = plt.subplots(1,1)
+fig, ax = plt.subplots(1,1, figsize=(5,5))
+plt.axhline(0, color='k', linestyle='--', linewidth=0.7)
+plt.title(f"Forest Fire Spread Model Iteration {time_step}")
 
 # Given our "forest" object, a 2D array that contains
 # numbers 1, 2, or 3,
