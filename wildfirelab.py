@@ -40,11 +40,11 @@ alive_forest = 2 #depicted as a green color in the figures to show trees
 on_fire = 3 #depicted as a red color in the figures to show flames
 
 p_spread = 1.0 # Chance to spread to adjacent cells.
-p_bare = 0.0 # Chance of cell to start as a bare patch.
-p_ignite = 0.0 # Chance of cell to start on fire.
+p_bare = 0.2 # Chance of cell to start as a bare patch.
+p_ignite = 0.05 # Chance of cell to start on fire.
 
 #Implement time as a varaible for the model
-time_step = 3
+time_step = 0
 
 #Section 3: Original Forest
 
@@ -52,7 +52,7 @@ time_step = 3
 
 nx, ny = 5, 7 # Number of cells in X and Y direction
 
-a, b = 2, 3 # Grid cell for initial burning
+#a, b = 2, 3 # Grid cell for initial burning
 
 #creating the main forest array that the rest of the model will build from
 ori_forest = np.zeros([ny, nx]) + 2
@@ -80,7 +80,7 @@ for i in range(1,nx-1): #Set range to avoid ghost nodes
 
 #Create a copy of the original forest to begin burning
 
-ori_forest[a,b] = on_fire
+#ori_forest[a,b] = on_fire
 
 burn_forest = np.copy(ori_forest)
 
