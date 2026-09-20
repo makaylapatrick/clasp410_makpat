@@ -1,5 +1,3 @@
-
-
 #Keeping track of what needs to happen in the lab
 '''
 What is actually happening?
@@ -44,28 +42,31 @@ p_bare = 0.0 # Chance of cell to start as a bare patch.
 p_ignite = 0.0 # Chance of cell to start on fire.
 
 #Implement time as a varaible for the model
-time_step = 3
+time_step = 0
 
 #Section 3: Original Forest
 
-#Create a forest 
+#Create a 3x3 forest 
 
-nx, ny = 5, 7 # Number of cells in X and Y direction
-
-a, b = 2, 3 # Grid cell for initial burning
+nx, ny = 5, 5 # Number of cells in X and Y direction, including buffer.
 
 #creating the main forest array that the rest of the model will build from
 ori_forest = np.zeros([ny, nx]) + 2
 
 #setting the outside grid to be 1, so the fire will not spread into the ghost cells
+for a in range(nx):
+    ori_forest[0, a] = 1
 
-ori_forest[[ny-1], :] = 1 # Selecting the bottom row of the forest grid
-ori_forest[:, [nx-1]] = 1 # Selecting the last column of the forest grid
-ori_forest[0, :] = 1 # Selecting the top row of the forest grid
-ori_forest[:, 0] = 1 # Selecting the first column of the forest grid
+for b in range(nx):
+    ori_forest[b, 0] = 1
+
+for c in range(ny):
+    ori_forest[4, c] = 1
+
+for d in range(ny):
+    ori_forest[d, 4] = 1
 
 print(ori_forest)
-
 
 #Section 4: Begin the Burning
 
@@ -80,7 +81,7 @@ for i in range(1,nx-1): #Set range to avoid ghost nodes
 
 #Create a copy of the original forest to begin burning
 
-ori_forest[a,b] = on_fire
+ori_forest[2,2] = on_fire
 
 burn_forest = np.copy(ori_forest)
 
@@ -146,4 +147,3 @@ ax.pcolor(ori_forest, cmap=forest_cmap, vmin=1, vmax=3)
 
 
 plt.show()
-
