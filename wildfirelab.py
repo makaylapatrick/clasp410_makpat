@@ -1,4 +1,4 @@
-
+#!/usr/bin/env python3
 
 #Keeping track of what needs to happen in the lab
 '''
@@ -16,8 +16,6 @@ What is actually happening?
 
 #The start of the script with a description of the purpose and
 # a main place where libraries can be imported.
-
-#!/usr/bin/env python3
 
 '''
 This file contains tools and scripts for completing Lab 1 for CLaSP410.
@@ -66,7 +64,6 @@ ori_forest[:, 0] = 1 # Selecting the first column of the forest grid
 
 print(ori_forest)
 
-
 #Section 4: Begin the Burning
 
 #Randomly generate forest with bare and forested cells
@@ -74,9 +71,9 @@ for i in range(1,nx-1): #Set range to avoid ghost nodes
     for j in range(1,ny-1):
         # Roll our "dice" to see if we get a bare spot:
         if np.random.rand() < p_bare:
-            ori_forest[j, i] = burnt_bare # 1 is a bare spot randomly generated
+            ori_forest[j, i] = burnt_bare # Bare spot randomly generated
         elif np.random.rand() < p_ignite:
-            ori_forest[j,i] = on_fire
+            ori_forest[j,i] = on_fire # Burning spot randomly generated
 
 #Create a copy of the original forest to begin burning
 
@@ -143,7 +140,6 @@ plt.title(f"Forest Fire Spread Model Iteration {time_step}")
 # Plot this using the "pcolor" method. Be sure to use our color map and
 # set both *vmin* and *vmax*:
 ax.pcolor(ori_forest, cmap=forest_cmap, vmin=1, vmax=3)
-
 
 plt.show()
 

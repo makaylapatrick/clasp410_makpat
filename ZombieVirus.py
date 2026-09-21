@@ -1,4 +1,6 @@
-#Zombie Virus
+#!/usr/bin/env python3
+
+# Zombie Virus Model
 
 '''
 This part of the lab will modify the original wildfire model
@@ -10,8 +12,6 @@ diseases, such as the zombie virus, spreads.
 
 #The start of the script with a description of the purpose and
 # a main place where libraries can be imported.
-
-#!/usr/bin/env python3
 
 '''
 This file contains tools and scripts for completing Lab 1 for CLaSP410.
@@ -25,6 +25,8 @@ import matplotlib.pyplot as plt
 import matplotlib.gridspec as grid
 import scipy as sp
 from matplotlib.colors import ListedColormap #creating a custom color map
+import matplotlib.colors as mcolors
+
 
 #Section 2: Defining Variables
 
@@ -35,12 +37,12 @@ healthy = 2 #depicted as a green color in the figures to show healthy individual
 infected = 3 #depicted as a red color in the figures to show where the virus has spread
 
 p_spread = 0.8 # Chance to spread to adjacent cells
-p_immune = 0.2 # Chance of person to start as immune
+p_immune = 0.5 # Chance of person to start as immune
 p_zombie = 0.05 # Chance of infection to begin in a cell
 p_fatal = 0.01 # Chance of infected to perish instead of recover
 
 #Implement time as a varaible for the model
-time_step = range(1)
+time_step = 2
 
 #Create an empty list so that the values from each time step can be saved
 outbreaks = []
@@ -55,7 +57,7 @@ nx, ny = 20, 20 # Number of cells in X and Y direction
 #creating the main array that the rest of the model will build from
 no_outbreak = np.zeros([ny, nx]) + 2
 
-#setting the outside grid to be 1, so the virus will not spread into the ghost cells
+#Setting the outside grid to be 1, so the virus will not spread into the ghost cells
 
 no_outbreak[[ny-1], :] = 1 # Selecting the bottom row of the grid
 no_outbreak[:, [nx-1]] = 1 # Selecting the last column of the grid
@@ -89,7 +91,11 @@ print(infected_pop)
 Create loop to begin rolling the dice to see where the randomly generated population
 will have an infected person appear and begin spreading the virus
 '''
+
 # Create a funciton to roll the dice for percentage of infected who perish or become immune
+
+#Create a function to roll specifically to see if an infected person will live or die
+#This is separate from the main for loop as it will be applied within the loop later
 def chance_perish():
     for i in range(1,nx-1): #Set range to avoid ghost nodes
         for j in range(1,ny-1):
@@ -101,7 +107,8 @@ def chance_perish():
             elif infected_pop[j, i] == immune:
                 print("You Survived :)")
 
-for k in time_step:
+#Function for rolling the dice over all possible neighbors
+for k in range(time_step):
     for i in range(1,nx-1): #Set range to avoid ghost nodes
         for j in range(1,ny-1):
             print(f"Current Position: {j, i}")
@@ -128,20 +135,19 @@ for k in time_step:
                 #Any of the infected population that does survive becomes immune
                 infected_pop[j, i] = immune
     
-          
     no_outbreak = np.copy(infected_pop)
     outbreaks.append(no_outbreak)
    
     print(no_outbreak)
     print(outbreaks)
 
-
+    
 #Section 6: Start visualizing the model
 
 # Generate our custom segmented color map for this project.
 # We can specify colors by names and then
-# create a colormap that only uses those names. We have 3 fundamental
-# states, so we want only 3 colors.
+# create a colormap that only uses those names. We have 4 fundamental
+# states, so we want only 4 colors.
 # Color info:
 #https://matplotlib.org/stable/gallery/color/named_colors.html
 forest_cmap = ListedColormap(['black', 'tan', 'darkgreen', 'firebrick'])
@@ -149,13 +155,13 @@ forest_cmap = ListedColormap(['black', 'tan', 'darkgreen', 'firebrick'])
 # Create figure and set of axes:
 fig, ax = plt.subplots(1,1, figsize=(5,5))
 plt.axhline(0, color='k', linestyle='--', linewidth=0.7)
-plt.title(f"Forest Fire Spread Model Iteration {time_step}")
+plt.title(f"Zombie Outbreak Spread Model {time_step}")
 
-# Given our "forest" object, a 2D array that contains
+# Given our object, a 2D array that contains
 # numbers 1, 2, or 3,
 # Plot this using the "pcolor" method. Be sure to use our color map and
 # set both *vmin* and *vmax*:
 ax.pcolor(no_outbreak, cmap=forest_cmap, vmin=0.0, vmax=3.0)
 
-
 plt.show()
+
