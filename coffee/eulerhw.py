@@ -18,7 +18,7 @@ cons_k = value of cooling constant k (0.1)
 
 delta_t = estimated time step (10)
 
-tolerance = |T_curr -Ts|
+tolerance = |temp_curr - temp_env|
 
 2. Define what we don't know
 the value of t at future time step when coffee temperature is equal to the final temperature
@@ -32,7 +32,7 @@ the loop will append to the copy until the final temperature is reached
 the loop will have a statement that tests to see if the desired final temp range has been reached.
 if it is not the loop will go through an additional statement that calculates:
 
-T_new = T_curr - delta_t*cons_k*(T_curr - temp_env)
+temp_new = temp_curr - delta_t*cons_k*(temp_curr - temp_env)
 
 4. Visualize the data
 The final step will be to plot the data as a curve so we can see how the coffee cools over time
@@ -54,20 +54,24 @@ cons_k = 0.1        #A constant inlcuded in Newtons Law of Cooling Eqn.
 time_step = 1       #The initial time step
 delta_t = 10        #The change in timesteps?
 
+tolerance = abs(temp_curr - temp_env)
+
 #Section 3: Make a function for the cooling equation
 
 def cooling_eqn():
+    
 
+if 
 
 
 
 
 #within a if and else statment
-t_curr = #copy of initial
+temp_curr = #copy of initial
 
-t_new = #equation
+temp_new = #equation
 
-t_curr = #copy of new 
+temp_curr = #copy of new 
 
 
 
