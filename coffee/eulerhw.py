@@ -61,10 +61,7 @@ time_history = []
 
 #Section 3: Run the loop
 
-#Start with an if statement for when the coffee will reach the desired temp.
-#if temp_coffee <= temp_final:
-#    print("Yay!! You can drink the coffee!")
-#Then have an elif statement to loop through the cooling equation
+#Create a while loop that goes through the cooling equation
 while temp_coffee > temp_final:
     #Run the cooling equation to calculate the new value
     temp_change  = - cons_k * delta_t * (temp_coffee - temp_env) 
