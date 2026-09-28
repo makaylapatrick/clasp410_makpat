@@ -79,5 +79,11 @@ print("Yay!! You can drink the coffee!")
 
 plt.figure(figsize=(5,5))
 plt.plot(time_history, cup_history, color='pink', linewidth='2')
+plt.axhline(y=temp_final, color="black", linestyle=':', label =f"Desired Temperature {temp_final} F")
 
+plt.title(f"Coffee Cup Cooling Over Time\nTime-Step(dt) of {delta_t}")
+plt.xlabel("Time-Steps(dt)")
+plt.ylabel("Temperature of Coffee (F)")
+
+plt.legend()
 plt.show()
