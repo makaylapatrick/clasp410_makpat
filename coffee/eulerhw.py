@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+
 '''
 For for this homework assignment we are trying to figure out how to calculate
 how long it takes for a coffee cup to cool to the temperature we desire.
@@ -45,33 +46,41 @@ import matplotlib.pyplot as plt
 
 #Section 2: Define Variables
 
-temp_init = 145     #The initial temperature value for the coffee
+temp_coffee = 145   #The initial temperature value for the coffee
 temp_env = 22       #The environmental temperature value
 temp_final = 80     #The final desired temperature of the coffee
 
 cons_k = 0.1        #A constant inlcuded in Newtons Law of Cooling Eqn.
 
-time_step = 1       #The initial time step
-delta_t = 10        #The change in timesteps?
+time_start = 0     #The initial time step
+delta_t = 0.1     #The change in timesteps
 
-tolerance = abs(temp_curr - temp_env)
+#Create empty lists to save the output of the elif loop for plotting later
+cup_history  = []
+time_history = []
 
-#Section 3: Make a function for the cooling equation
+#Section 3: Run the loop
 
-def cooling_eqn():
-    
+#Start with an if statement for when the coffee will reach the desired temp.
+#if temp_coffee <= temp_final:
+#    print("Yay!! You can drink the coffee!")
+#Then have an elif statement to loop through the cooling equation
+while temp_coffee > temp_final:
+    #Run the cooling equation to calculate the new value
+    temp_change  = - cons_k * delta_t * (temp_coffee - temp_env) 
+    #Calculate the next values
+    temp_coffee = temp_coffee + temp_change #Add the calculated temperature to the inital tempature
+    time_start = delta_t + time_start #Add the time step to the initial time
+    #Need to append the values before calculating new ones to not overwrite
+    cup_history.append(temp_coffee)
+    time_history.append(time_start)
+    #Print the values to ensure the updates are successful
+    print(cup_history)
+    print(time_history)
 
-if 
+print("Yay!! You can drink the coffee!")
 
+plt.figure(figsize=(5,5))
+plt.plot(time_history, cup_history, color='pink', linewidth='2')
 
-
-
-#within a if and else statment
-temp_curr = #copy of initial
-
-temp_new = #equation
-
-temp_curr = #copy of new 
-
-
-
+plt.show()
