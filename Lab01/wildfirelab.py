@@ -20,9 +20,6 @@ What is actually happening?
 '''
 This file contains tools and scripts for completing Lab 1 for CLaSP410.
 To reproduce the plots shown in the lab report, follow the steps below!
-
-All instances of '# %%' are merely to divide the code into cells for each part.
-The goal was to create ease when debugging individual sections of the cocde.
 '''
 import numpy as np
 import matplotlib.pyplot as plt 

@@ -53,7 +53,7 @@ temp_final = 80     #The final desired temperature of the coffee
 cons_k = 0.1        #A constant inlcuded in Newtons Law of Cooling Eqn.
 
 time_start = 0     #The initial time step
-delta_t = 0.1     #The change in timesteps
+delta_t = 0.7     #The change in timesteps
 
 #Create empty lists to save the output of the elif loop for plotting later
 cup_history  = []
