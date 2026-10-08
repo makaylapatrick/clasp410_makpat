@@ -30,7 +30,7 @@ time_total = 10 # Amount of time the model will iterate over
 species1_init = 0.3  
 species2_init = 0.6
 # Create an array of the inital population sizes for species 1 and 2
-pop_init = np.array([species1_init, species2_init]) 
+pop_init = np.array([species1_init, species2_init])
 
 # Create empty lists to store model output for future graphing purposes
 pop_history = [np.copy(pop_init)]
@@ -39,24 +39,25 @@ time_history = [0.0]
 #Section 3: Create Function for Competition Equations
 
 def lotka_comp(N, a, b, c, d):
-
     '''
     This function is designed to caluclate the Lotka-Volterra Competition
     equations for two species. 
     There are five required inputs for the equations:
     N: defines the inital population values for species 1 and species 2
-    a, c: define the theorhetical repreoduction rates of species 1 and 2 respectively
+    a, c: define the theorhetical reproduction rates of species 1 and 2 respectively
     b, d: define the impact of each species on each other
 
     The return will provide an array of the calculated change in population values where 
     dN1dt is the change in population for species 1
     dN2dt is the change in population for species 2
     '''
+    print(N)
+
     #Define the Lotka-Voltera Competition Eqns
     dN1dt = a * N[0] * (1 - N[0]) - b * N[0] * N[1]
     dN2dt= c * N[1] * (1 - N[1]) - d * N[0] * N[1]
 
-    return(np.array(dN1dt, dN2dt))
+    return(np.array([dN1dt, dN2dt]))
 
 first_step = lotka_comp(pop_init, a, b, c, d) # Run the function to see the first time step
 
@@ -81,8 +82,8 @@ for t in range(time_total):
     pop_history.append(pop_change)
     time_history.append(time_change)
     # Print the values calculated to ensure the calculations are running appropriately
-    print(pop_history)
-    print(time_history)
+    #print(pop_history)
+    #print(time_history)
 
 # Create an array of the population history calculated in the euler loop for easier plotting
 pop_history = np.array(pop_history)
@@ -105,7 +106,8 @@ def rk45_comp(N, a, b, c, d, dt, time):
         r.integrate(r.t + dt)
         pop1.append(r.y[0])
         pop2.append(r.y[1])
-
+        print(f"This is what t should be {r.t}")
+        print(f"This is what y should be {r.y}")
     #print(pop1)
     #print(pop2)
 
