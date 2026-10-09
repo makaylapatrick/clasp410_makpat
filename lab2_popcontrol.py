@@ -162,7 +162,7 @@ about rk45: a scipy product that can solve for an initial value problem for a sy
 🦭🦭🦭🦭🦭🦭🦭🦭🦭🦭
 '''
 
-'''
+
 orca_init = 0.3 #species 1 initial population density
 seal_init = 0.6 #species 2 initial population density
 N_init = [orca_init, seal_init]
@@ -206,7 +206,7 @@ plt.title('RK45 Method Phase Space Competition between Orcas (N1) and Seals (N2)
 plt.xlabel('Normalized Orca Population Density (N1)')
 plt.ylabel('Normalized Seal Population Density (N2)')
 plt.show()
-'''
+
 
 
 
