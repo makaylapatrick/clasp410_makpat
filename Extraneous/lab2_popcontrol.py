@@ -215,7 +215,7 @@ plt.show()
 🦭🦭🦭🦭🦭🦭🦭🦭🦭🦭
 '''
 
-'''
+
 orca_init = 0.3 #predator initial population density
 seal_init = 0.6 #prey initial population density
 N_init = [seal_init, orca_init]
@@ -261,6 +261,6 @@ plt.plot(sol.y[0], sol.y[1])
 plt.xlabel('Normalized Seal Population Density (N1)')
 plt.ylabel('Normalized Orca Population Density (N2)')
 plt.show()
-'''
+
 
 

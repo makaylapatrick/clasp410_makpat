@@ -25,10 +25,13 @@ Section 2: Introduce Initial Conditions
 '''
  To replicate results of competion models set these values to be:
     a = 1, b = 2, c = 1, d = 3
+    delta_t = 1
+    Replicating species 1 exctinction
+    a = 
 
  To replicate the results of predator-prey models set the values to be:
-    Replicating species 1 exctinction
-    a =
+    a = 1, b = 2, c = 1, d = 3
+    delta_t_pp = 0.001
 ''' 
 
 a = 1 # Reproduction rate of species 1
@@ -106,10 +109,11 @@ for t in range(time_total):
     competition = lotka_comp(delta_t_comp, pop_change_comp, a, b, c, d)
     # Calculate values for the next time steps
     pop_change_comp = pop_change_comp + competition * delta_t_comp
-    time_change_comp = time_change_comp + delta_t_comp
+    time_change_comp = time_change_comp + delta_t_comp   
     # Append these new values to the lists of pop_change and time_change
     pop_history_comp.append(pop_change_comp)
     time_history_comp.append(time_change_comp)
+
     # Uncomment to print the values calculated to ensure the calculations are running appropriately
     #print(pop_history_comp)
     #print(time_history_comp)
@@ -119,25 +123,33 @@ Section 5: Calculating competition with rk45 solver
 '''
 
 def rk45_comp(N, a, b, c, d, dt, time):
-    r = ode(lotka_comp).set_integrator('RK45', atol = 1.0e-14, rtol = 1.0e-12)
+    '''
+    This function is designed to calculate the Lotka-Volterra competition models, 
+    but using the scipy integrater ode package.
 
+    Instead of using the 'dopri5' method as shown in the lab documentation
+    I used the 'RK45' method because I found this to provide more reasonable results.
+    '''
+    # Utilize the ode package to calculate the competition equations
+    r = ode(lotka_comp).set_integrator('RK45')
+    # Define the inital parameters for use in the ode solver
     r.set_initial_value(N, 0).set_f_params(a, b, c, d)
-
-    # Need to create empty lists the function can append to
+    # Need to create empty lists the function can append to over time
     pop1 = []
     pop2 = []
     # Need to append the inital conditons into the list as the first step
     pop1.append(pop_init[0]) 
     pop2.append(pop_init[1])
-
-    # 
+    # Run a loop to calculate competition over time
     while r.successful() and r.t < time:
         r.integrate(r.t + dt)
+        # Append the calculated values to the empty lists created earlier
         pop1.append(r.y[0])
         pop2.append(r.y[1])
         
     return[pop1, pop2]
 
+# Run the rk45 competition solver function!
 rk45_pop_comp = rk45_comp(pop_init, a, b, c, d, delta_t_comp, time_total)
 
 '''
@@ -158,12 +170,23 @@ plt.style.use('tableau-colorblind10')
 # Plot the euler method data on the left hand figure
 ax1.plot(time_history_comp, species1, label = "Species 1")
 ax1.plot(time_history_comp, species2, label = "Species 2")
+ax1.set_xlim(0.0, 100)
+ax1.set_ylim(0,1)
+ax1.set_xlabel("Time (years)")
+ax1.set_ylabel("Population Density (N value)")
 ax1.set_title("Euler method")
 # Plot the rk45 method data on the right hand figure
 ax2.plot(rk45_pop_comp[0], label = "Species 1")
 ax2.plot(rk45_pop_comp[1], label = "Species 2")
+ax2.set_xlim(0.0, 100)
+ax2.set_ylim(0,1)
+ax2.set_xlabel("Time (years)")
+ax2.set_ylabel("Population Density (N value)")
 ax2.set_title("RK45 Solver Method")
 
+fig.suptitle("Lotka-Volterra Competition Model Outputs", fontsize = 20)
+ax1.legend()
+ax2.legend()
 plt.show()
 
 '''
@@ -199,17 +222,21 @@ print(f"This is the population change at the first time step of the predator-pre
 '''
 Section 8: Calculating predation with Euler method
 '''
+# To get an accurate representation of the time in 100 years over 
+# very small time steps we need to multiply total_time by 1000.
+predation_time = time_total * 1000
 
-for t in range(time_total*1000):
+for t in range(predation_time):
     # First we run the function we created earlier to calculate 
     # population change with our desired inputs
     pred_prey = lotka_pp(delta_t_pp, pop_change_pp, a, b, c, d)
     # Calculate values for the next time steps
-    pop_change_pp = pop_change_pp + pred_prey*delta_t_pp
+    pop_change_pp = pop_change_pp + pred_prey * delta_t_pp
     time_change_pp = time_change_pp + delta_t_pp
     # Append these new values to the lists of pop_change and time_change
     pop_history_pp.append(pop_change_pp)
     time_history_pp.append(time_change_pp)
+
     if time_change_pp>100:
         break
     # Uncomment to print the values calculated to ensure the calculations are running appropriately
@@ -221,10 +248,17 @@ Section 9: Calculating predation with rk45 method
 '''
 
 def rk45_pp(N, a, b, c, d, dt, time):
+    '''
+    This function is designed to calculate the Lotka-Volterra predator-prey models, 
+    but using the scipy integrater ode package.
+    
+    Instead of using the 'dopri5' method as shown in the lab documentation
+    I used the 'RK45' method because I found this to provide more reasonable results.
+    '''
+    # Utilize the ode package to calculate the predator-prey models
     r = ode(lotka_pp).set_integrator('RK45')
-
+    # Define the inital parameters for use in the ode solver
     r.set_initial_value(N, 0).set_f_params(a, b, c, d)
-
     # Need to create empty lists the function can append to
     prey = []
     predator= []
@@ -232,15 +266,21 @@ def rk45_pp(N, a, b, c, d, dt, time):
     prey.append(pop_init[0]) 
     predator.append(pop_init[1])
 
-    # 
+    # Run a loop to calculate competition over time
     while r.successful() and r.t < time:
         r.integrate(r.t + dt)
+        # Append the calculated values to the empty lists created earlier
         prey.append(r.y[0])
         predator.append(r.y[1])
         
     return[prey, predator]
-
+    
+# Run the rk45 predator-prey solver function!
 rk45_pop_pp = rk45_pp(pop_init, a, b, c, d, delta_t_pp, time_total)
+
+'''
+Section 10: Plotting the Predtor Prey Models
+'''
 
 # Create an array of the population history calculated in the euler loop for easier plotting
 pop_history_pp = np.array(pop_history_pp)
@@ -254,13 +294,49 @@ fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12,8))
 # Utilize a color blind friendly color scheme for accessibility of figures
 plt.style.use('tableau-colorblind10')
 # Plot the euler method data on the left hand figure
-ax1.plot(time_history_pp, prey, label = "Species 1")
-ax1.plot(time_history_pp, predator, label = "Species 2")
+ax1.plot(time_history_pp, prey, label = "Prey")
+ax1.plot(time_history_pp, predator, label = "Predator")
+ax1.set_ylim(0.2,0.7)
+ax1.set_xlabel(f"Time (step of {delta_t_pp} over {time_total} years)")
+ax1.set_ylabel("Population Density (N value)")
+ax1.set_title("Euler method")
 # Plot the rk45 method data on the right hand figure
-ax2.plot(rk45_pop_pp[0], label = "Species 1")
-ax2.plot(rk45_pop_pp[1], label = "Species 2")
+ax2.plot(rk45_pop_pp[0], label = "Prey")
+ax2.plot(rk45_pop_pp[1], label = "Predator")
+ax2.set_ylim(0.2,0.7)
+ax2.set_xlabel(f"Time (step of {delta_t_pp} over {time_total} years)")
+ax2.set_ylabel("Population Density (N value)")
+ax2.set_title("RK45 Solver Method")
 
+fig.suptitle("Lotka-Volterra Predator-Prey Model Outputs", fontsize = 20)
+ax1.legend()
+ax2.legend()
 plt.show()
+
+'''
+Section 11: Plotting Phase Diagrams
+'''
+# Generate the figure size and to display both the euler and rk45 outputs
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12,8))
+# Utilize a color blind friendly color scheme for accessibility of figures
+plt.style.use('tableau-colorblind10')
+# Plot the euler method data on the left hand figure
+ax1.plot(prey, predator,)
+ax1.set_xlabel("Prey Population Density (N value)")
+ax1.set_ylabel("Predator Population Density (N value)")
+ax1.set_title("Euler method")
+# Plot the rk45 method data on the right hand figure
+ax2.set_xlabel("Prey Population Density (N value)")
+ax2.set_ylabel("Predator Population Density (N value)")
+ax2.plot(rk45_pop_pp[0], rk45_pop_pp[1])
+ax2.set_title("RK45 Solver Method")
+
+fig.suptitle("Predator-Prey Phase Diagrams", fontsize = 20)
+plt.show()
+
+'''
+Section 12: Lorenz Equations
+'''
 
 
 
