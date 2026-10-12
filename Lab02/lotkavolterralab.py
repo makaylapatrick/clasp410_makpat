@@ -480,6 +480,10 @@ dx = solve_lorenz[:, 0]
 dy = solve_lorenz[:, 1]
 dz = solve_lorenz[:, 2]
 
+'''
+Section 14: Plot the Lorenz Output
+'''
+
 # Plot the results in a 3D space because of three directional variables produced
 fig = plt.figure(figsize=(10, 10))
 ax = fig.add_subplot(111, projection='3d')
