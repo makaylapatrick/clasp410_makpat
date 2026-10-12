@@ -58,7 +58,7 @@ To replicate species uneasy truce (Fig 2) set these values to be:
     N1 = 0.3, N2 = 0.6
 
 
-To replicate the results of predator-prey model phase diagrams (Fig 3a) set the values to be:
+To replicate the results of predator-prey model phase diagrams (Fig 3a and Fig 4a) set the values to be:
     a = 1, b = 1, c =1, d = 2
     delta_t_pp = 0.001
     N1 = 0.3, N2 = 0.6
@@ -73,7 +73,7 @@ To replicate the results of predator-prey model phase diagrams (Fig 3c) set the 
     delta_t_pp = 0.001
     N1 = 0.3, N2 = 0.6
 
-To replicate the results of predator-prey model phase diagrams (Fig 3d) set the values to be:
+To replicate the results of predator-prey model phase diagrams (Fig 3d and Fig 4b) set the values to be:
     a = 1, b = 1, c =2, d = 1
     delta_t_pp = 0.001
     N1 = 0.3, N2 = 0.6
@@ -90,9 +90,9 @@ To replicate the results of predator-prey model phase diagrams (Fig 3f) set the 
 ''' 
 
 a = 1 # Reproduction rate of species 1
-b = 2 # Varaible to scale the impact of species 2 on species 1
-c = 1 # Reproduction rate of species 2
-d = 2 # Varaible to scale the impact of species 1 on species 2
+b = 1 # Varaible to scale the impact of species 2 on species 1
+c = 2 # Reproduction rate of species 2
+d = 1 # Varaible to scale the impact of species 1 on species 2
 
 time_start = 0 # Initial time step
 time_total = 100 # Amount of time the model will iterate over
