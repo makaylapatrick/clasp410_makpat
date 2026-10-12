@@ -427,25 +427,25 @@ After running into many errors with the scipy ode package, I decided to follow a
 as seen in this post for solving Lorenze equations:
 https://medium.com/quantaphy/the-butterfly-effect-meet-the-lorenz-attractor-381ed89b98ab
 
-To replicate the results from the Lorenz model (Fig 4a) set the values to be:
+To replicate the results from the Lorenz model (Fig 5a) set the values to be:
     x = 1
     y = 1
     z = 1
     r =23
 
-To replicate the results from the Lorenz model (Fig 4a) set the values to be:
+To replicate the results from the Lorenz model (Fig 5b) set the values to be:
     x = 1.0e-5
     y = 1.0e-5
     z = 1.0e-5
     r =23
 
-To replicate the results from the Lorenz model (Fig 4a) set the values to be:
+To replicate the results from the Lorenz model (Fig 5c) set the values to be:
     x = 1
     y = 1
     z = 1
     r =25 
 
-To replicate the results from the Lorenz model (Fig 4a) set the values to be:
+To replicate the results from the Lorenz model (Fig 5d) set the values to be:
     x = 75
     y = 400000
     z = -0.0000007
