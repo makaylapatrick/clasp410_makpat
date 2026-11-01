@@ -100,7 +100,7 @@ Section 4: Part 2 - Write a function for the atmosphere model
 
 #Create a function for the layered atmosphere
 
-def layered_atmos(nlayers, solar_radiation, albedo, emisivity, earth_surface = 0):
+def layered_atmos(nlayers, solar_radiation, albedo, emissivity, earth_surface = 0):
     if debug:
         print("This is the start of the layered atmos function")
 
@@ -116,7 +116,7 @@ def layered_atmos(nlayers, solar_radiation, albedo, emisivity, earth_surface = 0
         The incoming solar radiation from the Sun. Defined above.
     albedo:
         The reflectivity of the Earth's surface. Defined above.
-    emisivity:
+    emissivity:
         The measure of radiation absorbed and emitted by each atmosphere layer.
     A:
         The coefficient matrix generated in the energy_balance function above
@@ -132,7 +132,7 @@ def layered_atmos(nlayers, solar_radiation, albedo, emisivity, earth_surface = 0
     '''
 
     #Utilize function for A
-    A = energy_balance(nlayers, emisivity)
+    A = energy_balance(nlayers, emissivity)
 
     #A check to make sure the matrix develops correctly in the function
     if debug:
@@ -165,7 +165,7 @@ def layered_atmos(nlayers, solar_radiation, albedo, emisivity, earth_surface = 0
         if x == 0:
             temp_calc = (fluxes[x]/stef_bol) ** (1/4) #Emissivity not included because it should =1 at surface
         else:
-            temp_calc = ((fluxes[x])/(stef_bol*emisivity)) ** (1/4)
+            temp_calc = ((fluxes[x])/(stef_bol*emissivity)) ** (1/4)
         temp[x] = temp_calc
 
     #Have a debug statement in case the values of the fluxes or temperatures seem innacurate
@@ -277,7 +277,7 @@ def ex2():
     This function is designed to run experiment two of the lab:
     How many layers do you need to have a surface temperature of 288 K?
     '''
-    #Following a different approach to try to avoid whatever problem was in ex1
+    #Following a different approach to try to avoid any problems that may have been in ex1
 
     #Define the emissivity from the lab document
     ex2_emis = 0.255
@@ -293,17 +293,19 @@ def ex2():
     for t in range(steps):
         N = t + 1 #Increase layer amount during each step
         ex2_calc = layered_atmos(N, solar_rad, albedo, ex2_emis, earth_surface=0)
+        #Add values to the empty lists to save for plotting
         ex2_temps.append(ex2_calc[0])
         ex2_layers.append(N)
 
-    print("These are the temps: ")
-    print(ex2_temps)
-    print("These are the layers: ")
-    print(ex2_layers)
+    if debug:
+        print("These are the temps: ")
+        print(ex2_temps)
+        print("These are the layers: ")
+        print(ex2_layers)
 
+    #Plot the data!!
     fig1 = plt.figure(1, figsize = (7, 5))
     ax2 = fig1.add_subplot(111)
-    #The data is strange so plot both surface and atmos layer for lab purposes
     ax2.plot(ex2_layers, ex2_temps)
     ax2.hlines(288, 0, 10, color = 'red', label = 'expected 288 K')
     ax2.set_xlabel("N Layers")
@@ -313,7 +315,113 @@ def ex2():
     plt.legend(loc = 'lower right')
     plt.show()
 
+#Run experiment 2!
 ex2()
+
+def plot_alt():
+    '''
+    This function is designed to plot the altitude for ex2
+
+    It has the exact same format but is using an expected N layer value of 5
+    '''
+
+    #Define the emissivity from the lab document
+    ex2_emis = 0.255
+
+    #Define the range of layers based on ex2 results
+    layers = 5
+
+    #Run the model for a five layer atmos with same emissivity 
+    temps = layered_atmos(layers, solar_rad, albedo, ex2_emis, earth_surface=0)
+
+    if debug:
+        print("These are the temperatures: ")
+        print(temps)
+
+    #Plot the data!!
+    fig1 = plt.figure(1, figsize = (7, 5))
+    ax2 = fig1.add_subplot(111)
+    ax2.plot(temps, np.arange(0, 6)) #Use np.arange here to make the layer list
+    ax2.set_xlabel("Temperature [K]")
+    ax2.set_ylabel("Atmospheric Layer")
+    ax2.set_title("Altitude vs. Temperature")
+    plt.grid()
+    plt.show()
+
+#Run the altitude plotting code! 
+plot_alt()
+
+'''
+Section 8: Experiment 3 - Finding the Size of Venus Atmosphere
+'''
+
+def ex3():
+    '''
+    This function is used to find the amount of atmospheric layers on Venus
+    '''
+    #First define the new constants
+    v_solar = 2600 #In W/m^2
+    v_emis = 1
+    steps = 110
+    v_albedo = 0.77 #From NASA
+
+    #Create empty lists to save values to
+    venus_temp = []
+    venus_layers = []
+
+    #Run through enough steps to find 700 k surface in the dense venus atmosphere
+    for l in range(steps):
+        v_layers = l + 1
+        venus = layered_atmos(v_layers, v_solar, v_albedo, v_emis, earth_surface=0)
+        venus_temp.append(venus[0])
+        venus_layers.append(v_layers)
+
+    #Plot the data!!
+    fig1 = plt.figure(1, figsize = (7, 5))
+    ax2 = fig1.add_subplot(111)
+    ax2.plot(venus_layers, venus_temp)
+    ax2.hlines(700, 0, 110, color = 'red', label = 'expected 700 K')
+    ax2.set_xlabel("Temperature [K]")
+    ax2.set_ylabel("Atmospheric Layer")
+    ax2.set_title("Layers of Venus Atmosphere")
+    plt.grid()
+    plt.legend(loc = 'lower right')
+    plt.show()
+
+#Run the function!
+ex3()
+
+'''
+Section 9: Experiment 4 - Nuclear War
+'''
+
+def ex4():
+    '''
+    This function is designed to solve the nulcear winter problem
+    '''
+    #Define new variables for the scenario
+    nuc_N = 5
+    nuc_solar = 1350 #W/m^2
+    nuc_albedo = 0 #No solar radiation will be influenced by the surface so this can be 0
+    nuc_emis = 0.5
+
+    #Run the model for a nuclear winter with the layer absorbing all the radiation being the top
+    nuclear = layered_atmos(nuc_N, nuc_solar, nuc_albedo, nuc_emis, earth_surface=5)
+
+    #Plot the data!!
+    fig1 = plt.figure(1, figsize = (7, 5))
+    ax2 = fig1.add_subplot(111)
+    ax2.plot(nuclear, np.arange(0, nuc_N +1))
+    ax2.set_xlabel("Temperature [K]")
+    ax2.set_ylabel("Atmospheric Layer")
+    ax2.set_title("Nuclear Winter")
+    plt.grid()
+    plt.show()
+
+ex4()
+
+
+
 
 
 
