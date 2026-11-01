@@ -23,22 +23,22 @@ import numpy as np
 import matplotlib.pyplot as plt 
 
 '''
-Section 2: Constants
+Section 2: Define Constants for Code Block 1
 '''
+#Create a debugging feature as recommended to prevent influence of typos
+debug = False
+
 #Define the layers of the atmosphere here
-nlayers = 3
+nlayers = 1
 
 #Define the emissivity of the Earth here
 #The value of emissivity has to be a percentage between 0 and 1
-emis = 1     
+emis = 1
 
 #Define other important constants here
 solar_rad = 1350   #The Solar Constant in W/m^2 
 albedo = 0.30       #The Earth's Albedo
 stef_bol = 5.67e-8  #The Stefan-Boltzmans constant
-
-#Create a debugging feature as recommended to prevent influence of typos
-debug = True
 
 '''
 Section 3: Part 1 - Derive an Energy Balance Model
@@ -46,7 +46,8 @@ Section 3: Part 1 - Derive an Energy Balance Model
 #Create a function for the matrix of coefficients (A)
 
 def energy_balance(nlayers, epsilon):
-
+    if debug:
+        print("This is the start of the energy balance function")
     '''
     This function is designed to create the diagonal matrix of coefficients (A)
     from Ax = b model equation.
@@ -100,6 +101,8 @@ Section 4: Part 2 - Write a function for the atmosphere model
 #Create a function for the layered atmosphere
 
 def layered_atmos(nlayers, solar_radiation, albedo, emisivity, earth_surface = 0):
+    if debug:
+        print("This is the start of the layered atmos function")
 
     '''
     This function will solve the Stefan-Boltzman law to return 
@@ -129,7 +132,7 @@ def layered_atmos(nlayers, solar_radiation, albedo, emisivity, earth_surface = 0
     '''
 
     #Utilize function for A
-    A = energy_balance(nlayers, emis)
+    A = energy_balance(nlayers, emisivity)
 
     #A check to make sure the matrix develops correctly in the function
     if debug:
@@ -140,7 +143,7 @@ def layered_atmos(nlayers, solar_radiation, albedo, emisivity, earth_surface = 0
     b = np.zeros((nlayers+1)) #An nlayer column full of zeros
 
     #Need to explictly define the surface layer value in b
-    b[earth_surface] = -(solar_radiation/4)*(1-albedo) #Where Fsolar = -S0/4*(1-a)
+    b[earth_surface] = -((solar_radiation*(1-albedo))/4) #Where Fsolar = -S0/4*(1-a)
 
     #Now solve for the flux values
     fluxes = np.linalg.solve(A, b) #An easier method of using linear solvers
@@ -157,7 +160,12 @@ def layered_atmos(nlayers, solar_radiation, albedo, emisivity, earth_surface = 0
     #The law states F = e*sigma*T^4
     #Need to solve for temperature here
     for x in range(len(fluxes)):
-        temp_calc = ((fluxes[x])/(stef_bol*emisivity)) ** (1/4)
+        #Consulted AI to figure out why I was getting surface values of 400 K here
+        #I needed to include a calculation to make sure the surface was calculated with the right emissivity
+        if x == 0:
+            temp_calc = (fluxes[x]/stef_bol) ** (1/4) #Emissivity not included because it should =1 at surface
+        else:
+            temp_calc = ((fluxes[x])/(stef_bol*emisivity)) ** (1/4)
         temp[x] = temp_calc
 
     #Have a debug statement in case the values of the fluxes or temperatures seem innacurate
@@ -175,28 +183,142 @@ if debug:
 '''
 Section 5: A validation test for the model
 '''
+def validation():
+    if debug:
+        print("This is the start of the validation function")
+    #Create a plot to show the matrix of 3 layer atmosphere with an emissivity of 1
+    #I used the process outlined here to plot the matrix:
+    #https://matplotlib.org/stable/gallery/images_contours_and_fields/matshow.html
 
-#Create a plot to show the matrix of 3 layer atmosphere with an emissivity of 1
-#I used the process outlined here to plot the matrix:
-#https://matplotlib.org/stable/gallery/images_contours_and_fields/matshow.html
+    #And the process here to make a better figure for the matrix:
+    #https://www.geeksforgeeks.org/python/matplotlib-pyplot-matshow-in-python/
 
-#And the process here to make a better figure for the matrix:
-#https://www.geeksforgeeks.org/python/matplotlib-pyplot-matshow-in-python/
+    #Create the matrix
+    val_model = energy_balance(nlayers, emis)
 
-#Create the matrix
-val_model = energy_balance(nlayers, emis)
+    #Plot the matrix
+    figure1 = plt.figure()
+    ax1 = figure1.add_subplot(111)
 
-#Plot the matrix
-figure1 = plt.figure()
-ax1 = figure1.add_subplot(111)
+    plt_fig1 = ax1.matshow(val_model)
+    figure1.colorbar(plt_fig1)
 
-plt_fig1 = ax1.matshow(val_model)
-figure1.colorbar(plt_fig1)
+    plt.title("Validation Matrix", size = 15)
+    plt.xlabel("Fluxes")
+    plt.ylabel("Model Layers")
 
-plt.title("Validation Matrix", size = 15)
-plt.xlabel("Fluxes")
-plt.ylabel("Model Layers")
+    plt.show()
 
-plt.show()
+if debug:
+    validation()
 
+'''
+-------------------------
+Code Block 2: Experiments
+-------------------------
+'''
+
+'''
+Section 6: Experiment 1 - Single Layer Atmosphere
+'''
+
+def ex1():
+    if debug:
+        print("This is the start of the ex1 function")
+    '''
+    This function is designed to run experiment one of the lab assignment:
+    A single layer atmosphere surface temperature over a range of emissivity values
+
+    Want to see what emissivity the model calculates at a temperature of 288 K
+    '''
+    #Following code ideas from classmate Jackson
+
+    #Create list of emis values over a range from 0 - 1 with 10 steps
+    emis = np.arange(0,1.1,0.1)
+
+    #Create empty list for the surface layer
+    surf_temperatures = []
+    #Create empty list for the atmosphere layer
+    atmos_temperatures = []
+
+    #Run the model over the various emis ranges
+    for e in emis:
+        print("this is the e value")
+        print(e)
+        temp = layered_atmos(1, solar_rad, albedo, e, earth_surface=0)
+        surf_temperatures.append(temp[0])
+        atmos_temperatures.append(temp[1])
+
+    print("These are the surface temp values: ")
+    print(surf_temperatures)
+
+    #Make the figure!
+    fig1 = plt.figure(1, figsize = (5, 5))
+    ax2 = fig1.add_subplot(111)
+    #The data is strange so plot both surface and atmos layer for lab purposes
+    ax2.plot(emis, surf_temperatures)
+    ax2.hlines(288, 0, 1, color = 'red', label = 'expected 288 K')
+    ax2.set_xlabel("Emissivities")
+    ax2.set_ylabel("Temperature [K]")
+    ax2.set_title("Temperature Change with Emissivity Change")
+    plt.grid()
+    plt.legend(loc = 'lower right')
+    plt.show()
+
+#Run experiment 1
+ex1()
+
+'''
+Section 7: Experiment 2 - How many layers does the Earth need?
+'''
+
+def ex2():
+    '''
+    This function is designed to run experiment two of the lab:
+    How many layers do you need to have a surface temperature of 288 K?
+    '''
+    #Following a different approach to try to avoid whatever problem was in ex1
+
+    #Define the emissivity from the lab document
+    ex2_emis = 0.255
+
+    #Assume a step range of 0 to 10
+    steps = 10
+
+    #Create empty lists to append the temp values and N values
+    ex2_temps = []
+    ex2_layers = []
+
+    #Loop over the steps to determine layers needed
+    for t in range(steps):
+        N = t + 1 #Increase layer amount during each step
+        ex2_calc = layered_atmos(N, solar_rad, albedo, ex2_emis, earth_surface=0)
+        ex2_temps.append(ex2_calc[0])
+        ex2_layers.append(N)
+
+    print("These are the temps: ")
+    print(ex2_temps)
+    print("These are the layers: ")
+    print(ex2_layers)
+
+    fig1 = plt.figure(1, figsize = (7, 5))
+    ax2 = fig1.add_subplot(111)
+    #The data is strange so plot both surface and atmos layer for lab purposes
+    ax2.plot(ex2_layers, ex2_temps)
+    ax2.hlines(288, 0, 10, color = 'red', label = 'expected 288 K')
+    ax2.set_xlabel("N Layers")
+    ax2.set_ylabel("Temperature [K]")
+    ax2.set_title("N Layers to Have Surface Temp of 288 K")
+    plt.grid()
+    plt.legend(loc = 'lower right')
+    plt.show()
+
+ex2()
+
+
+
+
+
+
+    
 
