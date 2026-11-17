@@ -703,11 +703,11 @@ def question_2(n_lats=18):
     fig, ax = plt.subplots(figsize=(8, 6))
 
     ax.plot(lats - 90.0,temp_warm(lats),"k--",label="Warm-Earth target")
-    ax.plot(lats - 90.0,best_temperature,label="Best coarse-grid fit")
+    ax.plot(lats - 90.0,best_temperature,label="Best Fit")
 
     ax.set_xlabel("Latitude (degrees)")
     ax.set_ylabel("Temperature (°C)")
-    ax.set_title("Question 2: Tuning the Warm-Earth Model")
+    ax.set_title(f"Question 2: Tuning the Warm-Earth Model\nemissivity: {best_emissivity} and diffusivity: {best_diffusivity}")
     ax.legend()
     ax.grid(True, alpha=0.3)
     fig.tight_layout()
