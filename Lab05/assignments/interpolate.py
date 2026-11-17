@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 
 '''
 Section 1: Import Libraries
@@ -28,13 +27,13 @@ print(y)
 
 #Well Info - km Easting, km Northing, m^2/s^2 Hydropotential
 well_info = [
-    [ 0, 0, 967],
-    [ 0, 3, 985],
-    [ 0, 6, 1000],
-    [ 0, 8, 990],
-    [ 20, 1, 965],
-    [ 20, 4, 995],
-    [ 20, 9, 970],
+    [0, 0, 967],
+    [0, 3, 985],
+    [0, 6, 1000],
+    [0, 8, 990],
+    [20, 1, 965],
+    [20, 4, 995],
+    [20, 9, 970],
 ]
 
 #Add values to the array
@@ -44,4 +43,5 @@ eastern_values = [np.array([1,4,9])*1e3, np.array([965, 995, 970])]
 #Interpolation
 potential_left = interp1d(western_values[0], western_values[1], kind = 'linear', fill_value="extrapolate")
 potential_right = interp1d(eastern_values[0], eastern_values[1], kind = 'linear', fill_value = "extrapolate")
-
+potential_top = interp1d(np.array([x[0],x[-1]]), np.array([potential_left[0], potential_right[0]]), kind='linear', fill_value="extrapolate") (x)
+potential_bot = interp1d(np.array([x[0],x[-1]]), np.array([potential_left[-1], potential_right[-1]]), kind='linear', fill_value="extrapolate") (x)
